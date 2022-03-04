@@ -94,6 +94,11 @@ int check_sum(char data[])
 		printf("check_sum=%d, data=%d\n",check_sum,data[size-1]);
 		return -1;
 	}
+	if(data[size-2]!=0x03){
+		printf("etx error\n");
+		return -1;
+	}
+	
 
 	return size;
 }
@@ -106,6 +111,7 @@ void check_head(int sock, char data[])
 	//checksum »Æ¿Œ
 	if((size=check_sum(data))==-1)
 	{
+		printf("checksum error\n");
 		return;
 	}
 
@@ -120,25 +126,45 @@ void check_head(int sock, char data[])
 		
 		else
 		{
-			printf("command error");
+			printf("command error\n");
 		}
 		
 	}
 
 	else
 	{
-		printf("head error");
+		printf("head error\n");
 	}
 }
 
 
 void recv_init(int sock, char data[],int size)
 {
-	int a;
-	
+	int x=0;
+	int word_start=4;
+	int index=4;
+	char serial_num[20]={0x00,};
+	char buf[128] = {0x00,};
+
 	printf("data size : %d\n",size);
 	
 	debugHexDump("recv_init", (unsigned char*)data, (int)size);
+
+	while(data[index]!=0x03)
+	{
+		if(data[index]==',')
+		{
+			for(x=0;x<index-word_start;x++)
+			{
+				
+			}
+			word_start=index+1;
+		}
+		
+		index++;
+	}
+
+	
 	send_init_respond(sock,data);
     
 }

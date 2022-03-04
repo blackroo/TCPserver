@@ -91,7 +91,7 @@ void init_packet(char message[],int BUFSIZE)
 
 	//data
 	message[index++]=0x04;
-	message[index++]=0xFF;
+	message[index++]=',';
 
 
 	//size-setting
